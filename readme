@@ -1,1 +1,2 @@
-This is a test
+Changes serials to Datamatrix QR code
+This is a simple program to change the serials to QR code. It uses the pylibmtx librabry to encode the serials and saves the QR image file into the same folder where serials are located.
