@@ -1,7 +1,7 @@
 from pylibdmtx.pylibdmtx import encode
-
+import os
 from PIL import Image
-
+CURRENT_DIR = os.path.dirname(__file__)
 
 def read_serials_from_file(file):
     """Read serial numbers from a file and return them as a list.
@@ -27,7 +27,7 @@ def generate_datamatrix(serials, output_path):
     
     encoded = encode(data.encode('utf-8'))    
     img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
-    new_width = 180
+    new_width = 200
     aspect_ratio = img.height / img.width
     new_height = int(new_width * aspect_ratio)
     
@@ -48,7 +48,7 @@ def main(input_file, output_path):
     print("Generated DataMatrix for all serials")
 
 if __name__ == "__main__":
-    input_file = r"C:\Users\CPokhrel\Desktop\2024 Watsonx challenge\serials.txt"  
-    output_path = r"C:\Users\CPokhrel\Desktop\2024 Watsonx challenge\Qrcode_for_all_serials.png"
+    input_file = os.path.join(CURRENT_DIR, "Data//serials.txt") 
+    output_path = os.path.join(CURRENT_DIR,"Data//Qrcode_for_all_serials.png")
 
     main(input_file, output_path)
