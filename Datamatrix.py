@@ -2,8 +2,7 @@ from pylibdmtx.pylibdmtx import encode
 import os
 import re
 from PIL import Image, ImageDraw, ImageFont
-import tkinter as tk
-from tkinter import filedialog,messagebox,commondialog
+from tkinter import filedialog
 
 CURRENT_DIR = os.path.dirname(__file__)
 global input_file
@@ -41,10 +40,16 @@ def generate_datamatrix(serials, output_path):
         img = Image.new('RGB', (combined_width, combined_height), "white")
 
         #creating drawing context for captions
-        draw = ImageDraw.Draw(combined_img)
+        draw = ImageDraw.Draw(img)
         font = ImageFont.load_default()
-        draw.text((20, 5), 'QR for first 100 serials', fill="black", font=font)
-        draw.text((img1.width + 40, 5), 'QR for remaining serials', fill="black", font=font)
+        
+        #first serial and last serial for first group
+        draw.text((20, 5), first_group[0], fill="black", font=font)
+        draw.text((20, img1.height + 20), first_group[-1], fill="black", font=font)
+        #first serial and last serial for second group
+        draw.text((img1.width + 40, 5), second_group[0], fill="black", font=font)
+        draw.text((img1.width + 40, img2.height + 20), second_group[-1], fill="black", font=font)
+        
         # Paste the images into the new image
         img.paste(img1, (10, 20))
         img.paste(img2, (img1.width + 20, 20)) 
@@ -52,7 +57,7 @@ def generate_datamatrix(serials, output_path):
     else:
         img = create_qr_image(serials)
         img.save(output_path)
-        
+       
     #messagebox.showinfo("SQR code generated successfully!", img.show())
     img.show()
     
@@ -66,6 +71,7 @@ def main(output_path):
     """
     input_file = filedialog.askopenfilename(title="Select a Text File for serials", filetypes=[("Text files", "*.txt")])
     
+    
     if input_file:
         with open(input_file, 'r') as file:
             serials = [re.sub(r"\s+", "", line.strip()) for line in file.readlines()]
@@ -77,6 +83,4 @@ def main(output_path):
         print("No file selected")
 
 if __name__ == "__main__":
-    main(output_path = os.path.join(CURRENT_DIR,"Input serials and output image//Qrcode_for_all_serials.png"))
-    #input_file = os.path.join(CURRENT_DIR, "Input serials and output image//serials.txt") 
-    #output_path = os.path.join(CURRENT_DIR,"Input serials and output image//Qrcode_for_all_serials.png")
+    main(output_path = os.path.join(CURRENT_DIR,"Qrcode_for_all_serials.png"))
